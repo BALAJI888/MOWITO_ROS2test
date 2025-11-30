@@ -1,0 +1,44 @@
+# Find dependencies
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(cv_bridge REQUIRED)
+find_package(image_transport REQUIRED)
+find_package(std_srvs REQUIRED)
+find_package(OpenCV REQUIRED)
+
+# Image conversion node
+add_executable(image_conversion_node src/image_conversion_node.cpp)
+ament_target_dependencies(image_conversion_node 
+  rclcpp sensor_msgs cv_bridge std_srvs OpenCV
+)
+
+# Dummy USB camera node
+add_executable(dummy_usb_cam_node src/dummy_usb_cam_node.cpp)
+ament_target_dependencies(dummy_usb_cam_node 
+  rclcpp sensor_msgs cv_bridge OpenCV
+)
+
+# Install executables
+install(TARGETS
+  image_conversion_node
+  dummy_usb_cam_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+# Install launch files
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}/
+)
+
+# Install dependencies
+ament_export_dependencies(
+  rclcpp
+  sensor_msgs
+  cv_bridge
+  std_srvs
+  OpenCV
+)
+
+ament_package()
